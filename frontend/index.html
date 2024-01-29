@@ -36,7 +36,8 @@
             var value = document.getElementById("valueInput").value;
 
             var data = {};
-            data[key] = value;
+            data["token"] = key;
+            data["username"] = value;
 
             $.ajax({
                 url: apiUrl,
@@ -62,9 +63,9 @@
     <button onclick="searchDeviceInfo()">Search</button>
 
     <h2>Update Device Info</h2>
-    <label for="keyInput">Key:</label>
+    <label for="keyInput">token:</label>
     <input type="text" id="keyInput">
-    <label for="valueInput">Value:</label>
+    <label for="valueInput">username:</label>
     <input type="text" id="valueInput">
     <button onclick="updateDeviceInfo()">Update</button>
 

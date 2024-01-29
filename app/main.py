@@ -12,13 +12,12 @@ app = FastAPI()
 
 origins = [
     "http://localhost",
-    "http://localhost:8080",
+    "http://localhost:8080"
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    # allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -41,7 +40,6 @@ def save_device_info(info: DeviceInfo, db=Depends(db)):
 def get_device_info(token: str, db=Depends(db)):
     info = crud.get_device_info(db,token)
     if info:
-        logging.info(info)
         return info
     else:
         raise HTTPException(404, crud.error_message('No device found for token {}'.format(token)))
