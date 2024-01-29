@@ -1,12 +1,27 @@
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from .database import SessionLocal, engine
 from sqlalchemy.orm import Session
+import logging
 from .schema import DeviceInfo, Configuration
 from . import crud, models
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+origins = [
+    "http://localhost",
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    # allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def db():
     try:
@@ -26,6 +41,7 @@ def save_device_info(info: DeviceInfo, db=Depends(db)):
 def get_device_info(token: str, db=Depends(db)):
     info = crud.get_device_info(db,token)
     if info:
+        logging.info(info)
         return info
     else:
         raise HTTPException(404, crud.error_message('No device found for token {}'.format(token)))

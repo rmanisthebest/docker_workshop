@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Device Info Search</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function searchDeviceInfo() {
+            var token = document.getElementById("tokenInput").value;
+            var apiUrl = "http://localhost:8080/device/info/" + token;
+
+            $.ajax({
+                url: apiUrl,
+                type: "GET",
+                success: function(response) {
+                    // Generate the HTML table
+                    var tableHTML = "<table><tr><th>Key</th><th>Value</th></tr>";
+                    for (var key in response) {
+                        tableHTML += "<tr><td>" + key + "</td><td>" + response[key] + "</td></tr>";
+                    }
+                    tableHTML += "</table>";
+
+                    // Display the table on the page
+                    document.getElementById("responseContainer").innerHTML = tableHTML;
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors if necessary
+                    console.log("Error:", error);
+                }
+            });
+        }
+
+        function updateDeviceInfo() {
+            var token = document.getElementById("tokenInput").value;
+            var apiUrl = "http://localhost:8080/device/info/" + token;
+            var key = document.getElementById("keyInput").value;
+            var value = document.getElementById("valueInput").value;
+
+            var data = {};
+            data[key] = value;
+
+            $.ajax({
+                url: apiUrl,
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function(response) {
+                    console.log("Update successful");
+                    // You can perform additional actions after a successful update
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors if necessary
+                    console.log("Error:", error);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Device Info Search</h1>
+    <label for="tokenInput">Token:</label>
+    <input type="text" id="tokenInput">
+    <button onclick="searchDeviceInfo()">Search</button>
+
+    <h2>Update Device Info</h2>
+    <label for="keyInput">Key:</label>
+    <input type="text" id="keyInput">
+    <label for="valueInput">Value:</label>
+    <input type="text" id="valueInput">
+    <button onclick="updateDeviceInfo()">Update</button>
+
+    <div id="responseContainer"></div>
+</body>
+</html>
